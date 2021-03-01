@@ -2,7 +2,7 @@
 
 ### 发布地址：
 
-https://github.com/klever1988/nanopi-openwrt/releases  
+https://github.com/biliwala/nanopi-openwrt/releases  
 (请记得下载zip包之后解压出里头的固件包再刷，不要拿zip直刷，会失败的！)
 
 ### 固件源码：
@@ -22,14 +22,14 @@ opkg install --force-overwrite pv fdisk
 ```
 然后下载脚本执行
 ```bash	
-wget -qO- https://github.com/klever1988/nanopi-openwrt/raw/master/scripts/autoupdate.sh | sh
+wget -qO- https://github.com/biliwala/nanopi-openwrt/raw/main/scripts/autoupdate.sh | sh
 ```	
 (脚本由gary lau提供，非常感谢！)
 
 ### 更新说明：
 
-https://github.com/klever1988/nanopi-openwrt/blob/master/CHANGELOG.md
+https://github.com/biliwala/nanopi-openwrt/blob/main/CHANGELOG.md
 
 #### 本固件(minimal版本)NAT基准性能测试：
 
-<img src="https://github.com/klever1988/nanopi-openwrt/raw/master/assets/NAT.jpg" width="600" /><img src="https://raw.githubusercontent.com/klever1988/nanopi-openwrt/master/assets/Acc.jpg" width="250" />
+<img src="https://github.com/biliwala/nanopi-openwrt/raw/main/assets/NAT.jpg" width="600" /><img src="https://raw.githubusercontent.com/biliwala/nanopi-openwrt/main/assets/Acc.jpg" width="250" />
