@@ -1,7 +1,7 @@
 name: Repo Dispatcher
 on:
   workflow_dispatch:
-    ref: refs/heads/main
+    #ref: refs/heads/main
 
 jobs:
   build:
