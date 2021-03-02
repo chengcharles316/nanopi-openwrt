@@ -123,13 +123,14 @@ jobs:
           path: ./artifact/firmware/
 
       - name: Upload release asset
-        uses: svenstaro/upload-release-action@v2
+        uses: biliwala/upload-release-action@v3
         with:
           repo_token: ${{ secrets.SEC_TOKEN }}
           file: ./release/*
           tag: ${{ github.event.client_payload.device }}-${{ env.strDate }}
           file_glob: true
           overwrite: true
+          target_commitish: main
           release_name: ${{ env.strDevice }} ${{ env.strDate }} 自动发布
 
       - name: Save cache state
