@@ -1,4 +1,5 @@
-sed -i 's/1400000/1450000/' target/linux/rockchip/patches-5.4/991-arm64-dts-rockchip-add-more-cpu-operating-points-for.patch
+#sed -i 's/1400000/1450000/' target/linux/rockchip/patches-5.4/991-arm64-dts-rockchip-add-more-cpu-operating-points-for.patch
+wget -O target/linux/rockchip/patches-5.4/991-arm64-dts-rockchip-add-more-cpu-operating-points-for.patch https://github.com/coolsnowwolf/lede/raw/master/target/linux/rockchip/patches-5.4/003-arm64-dts-rockchip-add-more-cpu-operating-points-for.patch
 truncate -s-1 package/lean/luci-app-cpufreq/root/etc/config/cpufreq
 echo -e "\toption governor0 'schedutil'" >> package/lean/luci-app-cpufreq/root/etc/config/cpufreq
 echo -e "\toption minfreq0 '816000'" >> package/lean/luci-app-cpufreq/root/etc/config/cpufreq
