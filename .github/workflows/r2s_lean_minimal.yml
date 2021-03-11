@@ -1,4 +1,4 @@
-name: r2s Lean版openwrt minimal 
+name: r2s Lean版openwrt minimal
 
 on:
   push:
@@ -15,6 +15,8 @@ jobs:
   build:
 
     runs-on: ubuntu-18.04
+    env:
+      TG: ${{ secrets.TELEGRAM_BOT_TOKEN }}
     if: github.repository == 'biliwala/nanopi-openwrt'
 
     steps:
@@ -69,25 +71,54 @@ jobs:
         id: assemble_artifact
         run: |
           . x_assemble_artifact.sh
+          tag_commitish="$(git rev-parse HEAD)"
           release_tag="R2S-Minimal-$(date +%Y-%m-%d)"
+          mkdir release && mv artifact.zip release/$release_tag-ROM.zip
+          mkdir package && cp -rf $(find ./friendlywrt-rk3328/ -type f -name "*.ipk") package/ && zip -r release/R2S-Package-$(date +%Y-%m-%d).zip package/*
+          echo "##[set-output name=tag_commitish;]$tag_commitish"
           echo "##[set-output name=release_tag;]$release_tag"
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.sec_token }}
-        with:
-          tag_name: ${{ steps.assemble_artifact.outputs.release_tag }}
-          release_name: 自动发布 ${{ steps.assemble_artifact.outputs.release_tag }}
-          draft: false
-          prerelease: false
+      # - name: Create Release
+      #   id: create_release
+      #   uses: actions/create-release@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.sec_token }}
+      #   with:
+      #     tag_name: ${{ steps.assemble_artifact.outputs.release_tag }}
+      #     release_name: 自动发布 ${{ steps.assemble_artifact.outputs.release_tag }}
+      #     draft: false
+      #     prerelease: false
+      # - name: Upload Release Asset
+      #   id: upload-release-asset
+      #   uses: actions/upload-release-asset@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.sec_token }}
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+      #     asset_path: ./artifact.zip
+      #     asset_name: ${{ steps.assemble_artifact.outputs.release_tag }}-ROM.zip
+      #     asset_content_type: application/zip
       - name: Upload Release Asset
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.sec_token }}
+        uses: biliwala/upload-release-action@v2
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: ./artifact.zip
-          asset_name: ${{ steps.assemble_artifact.outputs.release_tag }}-ROM.zip
-          asset_content_type: application/zip
+          repo_token: ${{ secrets.sec_token }}
+          file: ./release/*
+          tag: ${{ steps.assemble_artifact.outputs.release_tag }}
+          file_glob: true
+          overwrite: true
+          target_commitish: ${{ steps.assemble_artifact.outputs.tag_commitish }}
+          release_name: 自动发布 ${{ steps.assemble_artifact.outputs.release_tag }}
+
+      - name: Debug via tmate
+        uses: P3TERX/ssh2actions@main
+        if: ${{ failure() && env.TG }}
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+
+      - name: Send tg notification
+        uses: appleboy/telegram-action@master
+        if: env.TG
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          args: The ${{ steps.assemble_artifact.outputs.release_tag }} build ran completed at ${{job.status}}.
