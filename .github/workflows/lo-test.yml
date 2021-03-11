@@ -39,7 +39,7 @@ jobs:
         run: |
           cd
           sudo curl -sL https://raw.githubusercontent.com/biliwala/nanopi-openwrt/zstd-bin/zstd | sudo tee /usr/bin/zstd > /dev/null
-          for i in {1..6}
+          for i in {1..10}
           do
             curl -sL --fail https://github.com/biliwala/friendlywrt_manifests/releases/download/cache/lede.$DEVICE.img.zst.0$i || break
           done | zstdmt -d -o lede.img || (truncate -s 20g lede.img && mkfs.btrfs -M lede.img)
@@ -59,6 +59,7 @@ jobs:
           cd ~/lede
           ./scripts/feeds update -a
           ./scripts/feeds install -a
+          . $GITHUB_WORKSPACE/patches.sh
           . $GITHUB_WORKSPACE/merge_packages.sh
 
       - name: Custom configure file
