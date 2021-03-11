@@ -1,5 +1,5 @@
 cd ../../
-git clone -b master https://github.com/vernesong/OpenClash.git 
+git clone -b master --depth 1 https://github.com/vernesong/OpenClash
 mv OpenClash/luci-app-openclash friendlywrt-rk3328/friendlywrt/package
 cd friendlywrt-rk3328/friendlywrt/package/base-files/files
 mkdir -p etc/openclash/core && cd etc/openclash/core
