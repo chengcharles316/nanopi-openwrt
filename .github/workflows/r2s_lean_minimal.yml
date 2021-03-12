@@ -74,7 +74,7 @@ jobs:
           tag_commitish="$(git rev-parse HEAD)"
           release_tag="R2S-Minimal-$(date +%Y-%m-%d)"
           mkdir release && mv artifact.zip release/$release_tag-ROM.zip
-          mkdir package && cp -rf $(find ./friendlywrt-rk3328/ -type f -name "*.ipk") package/ && zip -r release/R2S-Package-$(date +%Y-%m-%d).zip package/*
+          mkdir package && cp -rf $(find ./friendlywrt-rk3328/ -type f -name "*.ipk") package/ && zip -jr release/R2S-Package-$(date +%Y-%m-%d).zip package/*
           echo "##[set-output name=tag_commitish;]$tag_commitish"
           echo "##[set-output name=release_tag;]$release_tag"
       # - name: Create Release
