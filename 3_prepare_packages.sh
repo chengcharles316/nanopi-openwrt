@@ -27,6 +27,7 @@ rm -rf v2ray-plugin/ && svn co https://github.com/coolsnowwolf/lede/trunk/packag
 rm -rf trojan/ && svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/trojan
 rm -rf autocore/ && svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/autocore
 svn co https://github.com/songchenwen/nanopi-r2s/trunk/luci-app-r2sflasher
+sed -i "s/option limit_enable '1'/option limit_enable '0'/" nft-qos/files/nft-qos.config
 cd ../../
 
 
