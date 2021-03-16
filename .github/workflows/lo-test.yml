@@ -13,10 +13,11 @@ jobs:
 
   build:
     name: ${{ github.event.client_payload.device || github.event.inputs.device }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     env:
       DEVICE: ${{ github.event.client_payload.device || github.event.inputs.device }}
       TG: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      DEPLOY_SSHKEY: ${{ secrets.SSH_KEY }}
     if: github.event.repository.owner.id == github.event.sender.id
 
     steps:
@@ -57,7 +58,6 @@ jobs:
       - name: Update feeds and packages
         run: |
           cd ~/lede
-          pushd package/feeds/packages/syncthing && git restore Makefile && popd #temporary fix
           ./scripts/feeds update -a
           ./scripts/feeds install -a
           . $GITHUB_WORKSPACE/patches.sh
@@ -82,10 +82,9 @@ jobs:
           rm -rf build_dir staging_dir; mv sdk/*/build_dir ./ && rsync -a --ignore-existing sdk/*/staging_dir/ ./staging_dir/
           rm -rf sdk
           fi
-          #ln -sf /usr/bin/upx-ucl staging_dir/host/bin/upx
           sed -i '/\(tools\|toolchain\)\/Makefile/d' Makefile
           echo -e '# CONFIG_SIGNED_PACKAGES is not set\n' >> .config
-          grep -l -r --include=\Makefile '(STAGING_DIR_HOST)/bin/upx ' | xargs -n1 -i sed -i '/upx/d' {}
+          #grep -l -r --include=\Makefile '(STAGING_DIR_HOST)/bin/upx ' | xargs -n1 -i sed -i '/upx/d' {}
 
           make defconfig
 
@@ -109,6 +108,7 @@ jobs:
           mkdir -p ./artifact/buildinfo
           mkdir -p ./release
           cd lede
+          cp -a bin tmp ../
           rm -rf $(find ./bin/targets/ -type d -name "packages")
           cp -rf $(find ./bin/targets/ -type f) ../artifact/firmware/
           cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ../artifact/package/
@@ -117,7 +117,7 @@ jobs:
           pushd ../release/ && md5sum $DEVICE.img.gz > md5sum.txt && popd
           echo "strDate=$(TZ=UTC-8 date +%Y-%m-%d)" >> $GITHUB_ENV
           echo "strDevice=$(echo $DEVICE | awk '{print toupper($0)}')" >> $GITHUB_ENV
-          rm -rf bin/ tmp/
+          rm -rf bin tmp
           cd ..
           mv artifact release $GITHUB_WORKSPACE
 
@@ -181,3 +181,36 @@ jobs:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           args: The ${{env.DEVICE}} build ran completed at ${{job.status}}.
+
+      - name: Build and deploy packages
+        if: env.DEPLOY_SSHKEY
+        run: |
+          cd
+          truncate -s +10G lede.img
+          sudo losetup -P --direct-io $LOOP_DEVICE lede.img
+          sudo mount -o nossd,compress=zstd $LOOP_DEVICE lede
+          sudo btrfs filesystem resize max lede/
+          mv bin tmp lede/
+          cd lede
+          p_kernel_digest=$(cat bin/targets/*/*/*.manifest | grep kernel | tail -c 33 | tr -d "\n")
+          find package/ -type d -name luci-app-* | rev | cut -d'/' -f1 | rev | sort | xargs -n1 -i echo CONFIG_PACKAGE_{}=m >> .config
+          make defconfig
+          make download -j
+          make target/linux/compile -j$(($(nproc) + 1))
+          make package/compile -j$(($(nproc) + 1)) IGNORE_ERRORS=m
+          make package/index
+          n_kernel_digest=$(cat bin/targets/*/*/*.manifest | grep kernel | tail -c 33 | tr -d "\n")
+          sed -i "s/$p_kernel_digest/$n_kernel_digest/" bin/targets/*/*/packages/Packages bin/targets/*/*/*.manifest
+          gzip -f bin/targets/*/*/packages/Packages
+          mkdir -p ~/.ssh; echo ${{env.DEPLOY_SSHKEY}} | base64 -d > ~/.ssh/id_ed25519; chmod 600 ~/.ssh/id_ed25519
+          rsync -avz --progress -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
+          bin/packages/*/* root@imgxxx.net:/usr/share/caddy/$DEVICE/
+          rsync -avz --progress -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
+          bin/targets/*/*/packages/ root@imgxxx.net:/usr/share/caddy/$DEVICE/core/
+
+      - name: Debug via tmate
+        uses: P3TERX/ssh2actions@main
+        if: ${{ failure() && env.TG }}
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
