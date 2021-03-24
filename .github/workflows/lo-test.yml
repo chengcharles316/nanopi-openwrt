@@ -160,6 +160,7 @@ jobs:
           overwrite: true
           #prerelease: true
           target_commitish: main
+          body: "${{env.DEVICE}}-${{env.strDate}}\nimmortalwrt version\n> Looking for minimal version?\n> [R2S-Minimal-${{env.strDate}}](https://github.com/biliwala/nanopi-openwrt/releases/tag/R2S-Minimal-${{env.strDate}})"
           release_name: ${{env.strDate}} 自动发布
 
       - name: Save cache state
@@ -245,6 +246,7 @@ jobs:
           overwrite: true
           #prerelease: true
           target_commitish: main
+          body: "${{env.DEVICE}}-${{env.strDate}}\nimmortalwrt version\n> Looking for minimal version?\n> [R2S-Minimal-${{env.strDate}}](https://github.com/biliwala/nanopi-openwrt/releases/tag/R2S-Minimal-${{env.strDate}})"
           release_name: ${{env.strDate}} 自动发布
 
       - name: Debug via tmate
