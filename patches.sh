@@ -19,4 +19,3 @@ rm -rf files
 mv $GITHUB_WORKSPACE/files ./
 #chmod 600 files/etc/dropbear/*
 rm -rf files/etc/dropbear
-sed -i "s/DEVICE/$DEVICE/" files/etc/opkg/distfeeds.conf
