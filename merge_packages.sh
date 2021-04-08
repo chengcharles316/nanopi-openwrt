@@ -20,6 +20,6 @@ merge_package https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-c
 merge_package https://github.com/coolsnowwolf/packages/trunk/kernel/ksmbd
 merge_package https://github.com/coolsnowwolf/packages/trunk/net/ksmbd-tools
 
-if [ $DEVICE = 'r2s' ]; then
+# if [ $DEVICE = 'r2s' ]; then
     # sed -i "s/enable '0'/enable '1'/" `find feeds/ -type f -name oled | grep config`
-fi
+# fi
