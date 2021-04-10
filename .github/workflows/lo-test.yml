@@ -199,7 +199,7 @@ jobs:
           overwrite: true
           #prerelease: true
           target_commitish: main
-          body: "${{env.DEVICE}}-${{env.strDate}}\nimmortalwrt version\n> Looking for minimal version?\n> [R2S-Minimal-${{env.strDate}}](https://github.com/biliwala/nanopi-openwrt/releases/tag/R2S-Minimal-${{env.strDate}})"
+          body: "${{env.DEVICE}}-${{env.strDate}}\nimmortalwrt version, please [README](https://github.com/biliwala/nanopi-openwrt/tree/main#readme) before use.\n> Looking for minimal version?\n> [R2S-Minimal-${{env.strDate}}](https://github.com/biliwala/nanopi-openwrt/releases/tag/R2S-Minimal-${{env.strDate}})"
           release_name: ${{env.strDate}} 自动发布
 
       - name: Send tg notification
@@ -253,7 +253,7 @@ jobs:
           overwrite: true
           #prerelease: true
           target_commitish: main
-          body: "${{env.DEVICE}}-${{env.strDate}}\nimmortalwrt version\n> Looking for minimal version?\n> [R2S-Minimal-${{env.strDate}}](https://github.com/biliwala/nanopi-openwrt/releases/tag/R2S-Minimal-${{env.strDate}})"
+          body: "${{env.DEVICE}}-${{env.strDate}}\nimmortalwrt version, please [README](https://github.com/biliwala/nanopi-openwrt/tree/main#readme) before use.\n> Looking for minimal version?\n> [R2S-Minimal-${{env.strDate}}](https://github.com/biliwala/nanopi-openwrt/releases/tag/R2S-Minimal-${{env.strDate}})"
           release_name: ${{env.strDate}} 自动发布
 
       - name: Send tg notification
