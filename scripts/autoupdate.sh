@@ -15,17 +15,17 @@ wget -P /tmp https://ghproxy.com/https://raw.githubusercontent.com/biliwala/nano
 wget -P /tmp https://ghproxy.com/https://raw.githubusercontent.com/biliwala/nanopi-openwrt/zstd-bin/ddnz
 chmod +x /tmp/truncate /tmp/ddnz
 
-board_id=$(cat /etc/board.json | jsonfilter -e '@["model"].id' | sed 's/friendlyarm,nanopi-//;s/-h5//')
-mount -t tmpfs -o remount,size=650m tmpfs /tmp
+board_id=$(cat /etc/board.json | jsonfilter -e '@["model"].id' | sed 's/friendly.*,nanopi-//;s/xunlong,orangepi-//;s/^r1s-h5$/r1s/;s/^r1$/r1s-h3/;s/^r1-plus$/r1p/')
+mount -t tmpfs -o remount,size=850m tmpfs /tmp
 rm -rf /tmp/upg && mkdir /tmp/upg && cd /tmp/upg
 set +e
-wget https://ghproxy.com/https://github.com/biliwala/nanopi-openwrt/releases/download/$(date +%Y-%m-%d)/$board_id$ver.img.gz -O $board_id.img.gz
+wget https://ghproxy.com/https://github.com/biliwala/nanopi-openwrt/releases/download/$(date +%Y-%m-%d)/$board_id$ver.img.gz -O- | gzip -dc > $board_id.img
 if [ $? -eq 0 ]; then
 	wget https://ghproxy.com/https://github.com/biliwala/nanopi-openwrt/releases/download/$(date +%Y-%m-%d)/$board_id$ver.img.md5 -O md5sum.txt
 	echo -e '\e[92m今天固件已下载，准备解压\e[0m'
 else
 	echo -e '\e[91m今天的固件还没更新，尝试下载昨天的固件\e[0m'
-	wget https://ghproxy.com/https://github.com/biliwala/nanopi-openwrt/releases/download/$(date -d "@$(( $(busybox date +%s) - 86400))" +%Y-%m-%d)/$board_id$ver.img.gz -O $board_id.img.gz
+	wget https://ghproxy.com/https://github.com/biliwala/nanopi-openwrt/releases/download/$(date -d "@$(( $(busybox date +%s) - 86400))" +%Y-%m-%d)/$board_id$ver.img.gz -O- | gzip -dc > $board_id.img
 	if [ $? -eq 0 ]; then
 		wget https://ghproxy.com/https://github.com/biliwala/nanopi-openwrt/releases/download/$(date -d "@$(( $(busybox date +%s) - 86400))" +%Y-%m-%d)/$board_id$ver.img.md5 -O md5sum.txt
 		echo -e '\e[92m昨天的固件已下载，准备解压\e[0m'
@@ -41,8 +41,8 @@ if [ `md5sum -c md5sum.txt|grep -c "OK"` -eq 0 ]; then
 	echo -e '\e[91m固件HASH值匹配失败，脚本退出\e[0m'
 	exit 1
 fi
-echo -e '\e[92m准备解压镜像文件\e[0m'
-pv $board_id.img.gz | gunzip -dc > FriendlyWrt.img && rm $board_id.img.gz
+
+mv $board_id.img FriendlyWrt.img
 
 bs=`expr $(cat /sys/block/mmcblk0/size) \* 512`
 ../truncate -s $bs FriendlyWrt.img
@@ -53,6 +53,7 @@ losetup -P $lodev FriendlyWrt.img
 mkdir -p /mnt/img
 mount -t ext4 ${lodev}p2 /mnt/img
 echo -e '\e[92m解压已完成，准备编辑镜像文件，写入备份信息\e[0m'
+sleep 10
 cd /mnt/img
 sysupgrade -b back.tar.gz
 tar zxf back.tar.gz
@@ -65,10 +66,10 @@ echo -e '\e[92m备份文件已经写入，移除挂载\e[0m'
 cd /tmp/upg
 umount /mnt/img
 
-sleep 2
+sleep 5
 umount ${lodev}p1
 umount ${lodev}p2
-e2fsck -pf ${lodev}p2 || true
+e2fsck -yf ${lodev}p2 || true
 resize2fs ${lodev}p2
 
 losetup -d $lodev
