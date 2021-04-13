@@ -147,7 +147,7 @@ jobs:
       - name: Send tg notification
         if: env.TG
         run: |
-          curl -sIL -k --data chat_id="${{secrets.TELEGRAM_CHAT_ID}}" --data "text=The ${{env.DEVICE}} packages build ran completed at ${{job.status}}." "https://api.telegram.org/bot${{secrets.TELEGRAM_BOT_TOKEN}}/sendMessage"
+          curl -s -w "%{http_code}\n" -o /dev/null -k --data chat_id="${{secrets.TELEGRAM_CHAT_ID}}" --data "text=The ${{env.DEVICE}} packages build ran completed at ${{job.status}}." "https://api.telegram.org/bot${{secrets.TELEGRAM_BOT_TOKEN}}/sendMessage"
 
       - name: Debug via tmate
         uses: P3TERX/ssh2actions@main
@@ -205,7 +205,7 @@ jobs:
       - name: Send tg notification
         if: env.TG
         run: |
-          curl -sIL -k --data chat_id="${{secrets.TELEGRAM_CHAT_ID}}" --data "text=The ${{env.DEVICE}} slim firmware build ran completed at ${{job.status}}." "https://api.telegram.org/bot${{secrets.TELEGRAM_BOT_TOKEN}}/sendMessage"
+          curl -s -w "%{http_code}\n" -o /dev/null -k --data chat_id="${{secrets.TELEGRAM_CHAT_ID}}" --data "text=The ${{env.DEVICE}} slim firmware build ran completed at ${{job.status}}." "https://api.telegram.org/bot${{secrets.TELEGRAM_BOT_TOKEN}}/sendMessage"
 
   generate_firmware:
     needs: build_packages
@@ -259,7 +259,7 @@ jobs:
       - name: Send tg notification
         if: env.TG
         run: |
-          curl -sIL -k --data chat_id="${{secrets.TELEGRAM_CHAT_ID}}" --data "text=The ${{env.DEVICE}} firmware build ran completed at ${{job.status}}." "https://api.telegram.org/bot${{secrets.TELEGRAM_BOT_TOKEN}}/sendMessage"
+          curl -s -w "%{http_code}\n" -o /dev/null -k --data chat_id="${{secrets.TELEGRAM_CHAT_ID}}" --data "text=The ${{env.DEVICE}} firmware build ran completed at ${{job.status}}." "https://api.telegram.org/bot${{secrets.TELEGRAM_BOT_TOKEN}}/sendMessage"
 
   generate_firmware_with_docker:
     needs: build_packages
@@ -313,5 +313,5 @@ jobs:
       - name: Send tg notification
         if: env.TG
         run: |
-          curl -sIL -k --data chat_id="${{secrets.TELEGRAM_CHAT_ID}}" --data "text=The ${{env.DEVICE}} firmware with docker build ran completed at ${{job.status}}." "https://api.telegram.org/bot${{secrets.TELEGRAM_BOT_TOKEN}}/sendMessage"
+          curl -s -w "%{http_code}\n" -o /dev/null -k --data chat_id="${{secrets.TELEGRAM_CHAT_ID}}" --data "text=The ${{env.DEVICE}} firmware with docker build ran completed at ${{job.status}}." "https://api.telegram.org/bot${{secrets.TELEGRAM_BOT_TOKEN}}/sendMessage"
 
