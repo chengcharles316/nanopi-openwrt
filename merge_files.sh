@@ -15,4 +15,6 @@ eval `cat .config | grep \" | head -n 10`
 echo "iptables -t nat -A PREROUTING -p udp --dport 53 -j REDIRECT --to-ports 53" >> files/etc/firewall.user
 echo "iptables -t nat -A PREROUTING -p tcp --dport 53 -j REDIRECT --to-ports 53" >> files/etc/firewall.user
 
+if [ -f package/kernel/linux/files/sysctl-br-netfilter.conf ]; then
 sed -i 's/=1/=0/g' package/kernel/linux/files/sysctl-br-netfilter.conf
+fi

@@ -6,6 +6,7 @@ sed -i "/dep.*INCLUDE_.*=n/d" package/ctcgfw/luci-app-turboacc/Makefile
 find . -type f -name nft-qos.config | xargs sed -i "s/option limit_enable '1'/option limit_enable '0'/"
 sed -i "/\/etc\/coremark\.sh/d" package/feeds/packages/coremark/coremark
 sed -i 's/192.168.1.1/192.168.2.1/' package/base-files/files/bin/config_generate
+sed -i 's/=1/=0/g' package/kernel/linux/files/sysctl-br-netfilter.conf
 
 sed -i '/DEPENDS/ s/$/ +libcap-bin/' `find . -type f -path '*/luci-app-openclash/Makefile'`
 sed -i '/DEPENDS+/ s/$/ +wsdd2/' `find . -type f -path '*/ksmbd-tools/Makefile'`
@@ -22,9 +23,8 @@ fi
 
 if [ $DEVICE = 'r4s' ]; then
     wget https://github.com/immortalwrt/immortalwrt/commit/6c3f6d2686679173b95495c47d861db1f41729dd.patch
-    sed -i 's/ctcgfw/kernel/g' 6c3f6d2686679173b95495c47d861db1f41729dd.patch
-    git apply 6c3f6d2686679173b95495c47d861db1f41729dd.patch
-    rm 6c3f6d2686679173b95495c47d861db1f41729dd.patch
+    sed -i 's/package\/ctcgfw\/r8168\///g' 6c3f6d2686679173b95495c47d861db1f41729dd.patch
+    mv 6c3f6d2686679173b95495c47d861db1f41729dd.patch package/kernel/r8168/patches/099-6c3f6d2686679173b95495c47d861db1f41729dd.patch
     sed -i 's/r8169/r8168/' target/linux/rockchip/image/armv8.mk
 fi
 
