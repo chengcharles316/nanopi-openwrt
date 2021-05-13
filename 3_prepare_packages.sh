@@ -24,6 +24,8 @@ rm -rf luci-app-chinadns-ng/ && git clone https://github.com/WuSiYu/luci-app-chi
 rm -rf openwrt-chinadns-ng/ && git clone https://github.com/pexcn/openwrt-chinadns-ng && sed -i 's/\$(PKG_BUILD_DIR)\/chinadns-ng-update-list\.sh/files\/chinadns-ng-update-list\.sh/g' openwrt-chinadns-ng/Makefile
 rm -rf v2ray/ && mkdir v2ray && cd v2ray && wget https://github.com/coolsnowwolf/lede/raw/622af09a79af119f4f719a50988b5b314f723383/package/lean/v2ray/Makefile && sed -i 's/4\.34\.0/4\.37\.2/g' Makefile && sed -i 's/b250f569cb0369f394f63184e748f1df0c90500feb8a1bf2276257c4c8b81bee/ece74b2f0e04d9cd487d1b4d79010f0269b6ee0742aaeb147979e5b97639ffa3/g' Makefile && cd ..
 rm -rf v2ray-plugin/ && mkdir v2ray-plugin && cd v2ray-plugin && wget https://github.com/coolsnowwolf/lede/raw/763081f891c89f86fa6de0defdbfe359fb3aec92/package/lean/v2ray-plugin/Makefile && cd ..
+rm -rf luci-app-ssr-plus/ && svn co https://github.com/fw876/helloworld/trunk/luci-app-ssr-plus
+rm -rf shadowsocksr-libev/ && svn co https://github.com/fw876/helloworld/trunk/shadowsocksr-libev
 rm -rf trojan/ && svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/trojan
 rm -rf autocore/ && svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/autocore
 svn co https://github.com/songchenwen/nanopi-r2s/trunk/luci-app-r2sflasher
