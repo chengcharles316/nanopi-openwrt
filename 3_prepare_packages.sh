@@ -28,6 +28,7 @@ rm -rf luci-app-ssr-plus/ && svn co https://github.com/fw876/helloworld/trunk/lu
 rm -rf shadowsocksr-libev/ && svn co https://github.com/fw876/helloworld/trunk/shadowsocksr-libev
 rm -rf trojan/ && svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/trojan
 rm -rf autocore/ && svn export https://github.com/coolsnowwolf/lede/trunk/package/lean/autocore
+rm -rf luci-app-unblockmusic/ && svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-unblockmusic
 svn co https://github.com/songchenwen/nanopi-r2s/trunk/luci-app-r2sflasher
 sed -i "s/option limit_enable '1'/option limit_enable '0'/" nft-qos/files/nft-qos.config
 cd ../../
