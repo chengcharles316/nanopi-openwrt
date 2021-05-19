@@ -1,7 +1,7 @@
-sed -i "s/option hw_flow '1'/option hw_flow '0'/" package/ctcgfw/luci-app-turboacc/root/etc/config/turboacc
-sed -i "s/option sfe_flow '1'/option sfe_flow '0'/" package/ctcgfw/luci-app-turboacc/root/etc/config/turboacc
-sed -i "s/option sfe_bridge '1'/option sfe_bridge '0'/" package/ctcgfw/luci-app-turboacc/root/etc/config/turboacc
-sed -i "/dep.*INCLUDE_.*=n/d" package/ctcgfw/luci-app-turboacc/Makefile
+sed -i "s/option hw_flow '1'/option hw_flow '0'/" package/feeds/luci/luci-app-turboacc/root/etc/config/turboacc
+sed -i "s/option sfe_flow '1'/option sfe_flow '0'/" package/feeds/luci/luci-app-turboacc/root/etc/config/turboacc
+sed -i "s/option sfe_bridge '1'/option sfe_bridge '0'/" package/feeds/luci/luci-app-turboacc/root/etc/config/turboacc
+sed -i "/dep.*INCLUDE_.*=n/d" package/feeds/luci/luci-app-turboacc/Makefile
 
 find . -type f -name nft-qos.config | xargs sed -i "s/option limit_enable '1'/option limit_enable '0'/"
 sed -i "/\/etc\/coremark\.sh/d" package/feeds/packages/coremark/coremark
@@ -15,10 +15,10 @@ if [ $DEVICE = 'r2s' ]; then
     #sed -i "s/enable '0'/enable '1'/" `find feeds/ -type f -name oled | grep config`
     #sed -i 's/1400000/1450000/' target/linux/rockchip/patches-5.4/991-arm64-dts-rockchip-add-more-cpu-operating-points-for.patch
     wget -O target/linux/rockchip/patches-5.4/991-arm64-dts-rockchip-add-more-cpu-operating-points-for.patch https://github.com/coolsnowwolf/lede/raw/67198ef5bed911ee87b696bfcb662b99e12e1fbb/target/linux/rockchip/patches-5.4/003-arm64-dts-rockchip-add-more-cpu-operating-points-for.patch
-    truncate -s-1 package/lean/luci-app-cpufreq/root/etc/config/cpufreq
-    echo -e "\toption governor0 'schedutil'" >> package/lean/luci-app-cpufreq/root/etc/config/cpufreq
-    echo -e "\toption minfreq0 '816000'" >> package/lean/luci-app-cpufreq/root/etc/config/cpufreq
-    echo -e "\toption maxfreq0 '1512000'\n" >> package/lean/luci-app-cpufreq/root/etc/config/cpufreq
+    truncate -s-1 package/feeds/luci/luci-app-cpufreq/root/etc/config/cpufreq
+    echo -e "\toption governor0 'schedutil'" >> package/feeds/luci/luci-app-cpufreq/root/etc/config/cpufreq
+    echo -e "\toption minfreq0 '816000'" >> package/feeds/luci/luci-app-cpufreq/root/etc/config/cpufreq
+    echo -e "\toption maxfreq0 '1512000'\n" >> package/feeds/luci/luci-app-cpufreq/root/etc/config/cpufreq
 fi
 
 if [ $DEVICE = 'r4s' ]; then
