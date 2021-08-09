@@ -5,10 +5,10 @@ on:
     branches: [ master ]
     paths:
       - '.github/workflows/r2s_lean_minimal.yml'
-  schedule:
-    - cron: '40 06 * * *'
-  workflow_dispatch:
-    ref: refs/heads/master
+ # schedule:
+   # - cron: '40 06 * * *'
+ # watch:
+   # types: started 
 
 jobs:
 
@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-18.04
     env:
       TG: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-    if: github.repository == 'biliwala/nanopi-openwrt'
+    if: github.repository == 'chengcharles316/nanopi-openwrt'
 
     steps:
 
@@ -110,19 +110,19 @@ jobs:
           target_commitish: ${{ steps.assemble_artifact.outputs.tag_commitish }}
           release_name: 自动发布 ${{ steps.assemble_artifact.outputs.release_tag }}
 
-      - name: Debug via tmate
-        uses: P3TERX/ssh2actions@main
-        if: 0 #${{ failure() && env.TG }}
-        env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+     # - name: Debug via tmate
+       # uses: P3TERX/ssh2actions@main
+       # if: 0 #${{ failure() && env.TG }}
+       # env:
+         # TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+         # TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
 
-      - name: Send tg notification
-        if: env.TG
-        #uses: appleboy/telegram-action@master
-        #with:
-        #  to: ${{ secrets.TELEGRAM_CHAT_ID }}
-        #  token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+     # - name: Send tg notification
+       # if: env.TG
+       # uses: appleboy/telegram-action@master
+       # with:
+         # to: ${{ secrets.TELEGRAM_CHAT_ID }}
+         # token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         #  args: The ${{ steps.assemble_artifact.outputs.release_tag }} build ran completed at ${{job.status}}.
-        run: |
-          curl -s -w "%{http_code}\n" -o /dev/null -k --data chat_id="${{secrets.TELEGRAM_CHAT_ID}}" --data "text=The ${{ steps.assemble_artifact.outputs.release_tag }} build ran completed at ${{job.status}}." "https://api.telegram.org/bot${{secrets.TELEGRAM_BOT_TOKEN}}/sendMessage"
+       # run: |
+         # curl -s -w "%{http_code}\n" -o /dev/null -k --data chat_id="${{secrets.TELEGRAM_CHAT_ID}}" --data "text=The ${{ steps.assemble_artifact.outputs.release_tag }} build ran completed at ${{job.status}}." "https://api.telegram.org/bot${{secrets.TELEGRAM_BOT_TOKEN}}/sendMessage"
