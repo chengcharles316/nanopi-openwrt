@@ -1,12 +1,14 @@
 name: r2s original Build 原版friendlywrt
 
 on:
-  push:
-    branches: 
-      - master
-    paths: 
-      - 'r2s.config.seed'
-      - '.github/workflows/r2s_original.yml'
+  repository_dispatch:
+  workflow_dispatch:
+ # push:
+   # branches: 
+     # - master
+   # paths: 
+     # - 'r2s.config.seed'
+     # - '.github/workflows/r2s_original.yml'
 
 jobs:
 
