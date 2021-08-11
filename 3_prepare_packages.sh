@@ -34,6 +34,7 @@ svn co https://github.com/songchenwen/nanopi-r2s/trunk/luci-app-r2sflasher
 svn co https://github.com/sirpdboy/luci-app-advanced
 svn co https://github.com/jerrykuku/luci-app-argon-config
 svn co https://github.com/linkease/ddnsto-openwrt
+svn co https://github.com/imapproxy/luci-app-turboacc
 sed -i "s/option limit_enable '1'/option limit_enable '0'/" nft-qos/files/nft-qos.config
 cd ../../
 
