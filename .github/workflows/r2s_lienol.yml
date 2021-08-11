@@ -1,15 +1,17 @@
 name: r2s Lienol版openwrt
 
 on:
-  push:
-    branches:
-      - master
-    paths:
-      - '.github/workflows/r2s_lienol.yml'
-  schedule:
-    - cron: '30 10 */5 * *'
+  repository_dispatch:
   workflow_dispatch:
-    ref: refs/heads/master
+ # push:
+   # branches:
+     # - master
+   # paths:
+     # - '.github/workflows/r2s_lienol.yml'
+ # schedule:
+   # - cron: '30 10 */5 * *'
+ # workflow_dispatch:
+   # ref: refs/heads/master
 
 jobs:
 
