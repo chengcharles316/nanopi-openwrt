@@ -1,6 +1,8 @@
 name: r2s Lean版openwrt minimal
 
 on:
+  repository_dispatch:
+  workflow_dispatch:
   push:
     branches: [ master ]
     paths:
@@ -15,8 +17,6 @@ jobs:
   build:
 
     runs-on: ubuntu-18.04
-    env:
-      TG: ${{ secrets.TELEGRAM_BOT_TOKEN }}
     if: github.repository == 'chengcharles316/nanopi-openwrt'
 
     steps:
